@@ -25,6 +25,31 @@ public class App {
         
     
     */ 
+    public static String hallar_numero(){
+        try {
+            final short MIN = 1_000;
+            final short MAX = 10_000;
+            final byte UNO = 1;
+            Scanner input = new Scanner(System.in);
+
+            short numero_usuario;
+            do {
+                System.out.println("Introduzca un numero entre 1000 y 9999: ");
+                numero_usuario = input.nextShort();
+                if (numero_usuario < MIN || numero_usuario >= MAX) System.out.println("El numero no está dentro del rango especificado, intentelo de nuevo");
+            }while (numero_usuario < MIN || numero_usuario > MAX);
+
+            short aleatorio;
+            short intentos = 0;
+            do {
+                aleatorio = (short) (Math.random() * (MAX - MIN + UNO) + MIN);
+                intentos ++;
+            }while (aleatorio != numero_usuario);
+            return String.format("Fin, el numero era %s, tomó %s intentos", aleatorio, intentos);
+        } catch (Exception e) {
+            return "Ha ocurrido un error: " + e;
+        }
+    }
 
 
 
@@ -61,6 +86,26 @@ public class App {
         
       
     */
+    public  static String simular_ventas(){
+        final int MILLON = 1_000_000;
+
+        StringBuilder salida = new StringBuilder();
+        DecimalFormat df = new DecimalFormat("$#,###.00");
+        double ventas_mes;
+        double total_ventas;
+
+        for (int i = 1; i < 4; i++) {
+            total_ventas = 0;
+            salida.append(String.format("Año %s\n", i));
+            for (int j = 1; j < 13; j++) {
+                ventas_mes =  (Math.random() * MILLON);
+                total_ventas += ventas_mes;
+                salida.append(String.format("Ventas mes %s: %s\n", j, df.format(ventas_mes)));
+            }
+            salida.append(String.format("Total ventas año %s: %s\n", i, df.format(total_ventas)));
+        }
+        return salida.toString();
+    }
 
     
 
@@ -85,6 +130,35 @@ public class App {
 
 
     */
+    public static String Calcular_empaque(int bombillas){
+        try {
+            StringBuilder mensaje = new StringBuilder();
+            final byte CAJASxESTIBA = 16;
+            final byte BOMBILLASxCAJA = 30;
+
+            double total_cajas = (short) (bombillas / BOMBILLASxCAJA);
+            double resto_bombillas = (short) (bombillas - total_cajas*BOMBILLASxCAJA);
+            double total_estiba = Math.ceil(total_cajas / CAJASxESTIBA);
+
+            mensaje.append(String.format("Para %s bombillas, se necesitan %s cajas y %s pallets. Se quedan %s bombillas sin empacar. Se empacará así:\n", bombillas, total_cajas, total_estiba, resto_bombillas));
+
+            byte num_palet = 1;
+            byte contador_pallet = 16;
+            for (int i = 1; i <= total_cajas; i++) {
+                if (contador_pallet == CAJASxESTIBA) {
+                    mensaje.append(String.format("\nPallet %s => ", num_palet));
+                    num_palet++;
+                    contador_pallet = 0;
+                }
+                mensaje.append(String.format("Caja %s, ", i));
+                contador_pallet += 1;
+            }
+            return mensaje.toString();
+        }
+        catch (Exception e) {
+            return "Ha ocurrido un error\n" + e;
+        }
+    }
 
 
 
@@ -111,6 +185,47 @@ public class App {
 
 
     */
+    public static String juego_cartas(byte n_jugadores){
+        try {
+
+            final byte MAX_JUGADORES = 6;
+            final byte MIN_JUGADORES = 1;
+            if (n_jugadores < MIN_JUGADORES || n_jugadores > MAX_JUGADORES)
+                return String.format("Tiene que haber entre %s y %s jugadores", MIN_JUGADORES, MAX_JUGADORES);
+
+            final byte MAX_CARTA = 10;
+            final byte MIN_CARTA = 1;
+            final byte NUM_CARTAS = 3;
+            final byte PERFECTO = 21;
+
+            byte carta, total;
+            StringBuilder mensaje = new StringBuilder();
+
+            for (int i = 1; i <= 3; i++) {
+                mensaje.append(String.format("\n-----Intento %s-----", i));
+                for (int j = 1; j <= n_jugadores; j++) {
+                    total = 0;
+                    mensaje.append(String.format("\nJugador %s => ", j));
+                    for (int k = 1; k <= NUM_CARTAS; k++) {
+                        carta = (byte) (Math.random() * (MAX_CARTA) + MIN_CARTA);
+                        total += carta;
+                        mensaje.append(String.format("%s, ", carta));
+                    }
+                    mensaje.append(String.format("\nTotal => %s\t", total));
+                    if (total < PERFECTO)
+                        mensaje.append("faltaron puntos");
+                    else if (total > PERFECTO)
+                        mensaje.append("se pasó");
+                    else
+                        mensaje.append("juego perfecto");
+                }
+            }
+            return mensaje.toString();
+        }
+        catch (Exception e) {
+            return "Ha ocurrido un error\n" + e;
+        }
+    }
 
 
 
